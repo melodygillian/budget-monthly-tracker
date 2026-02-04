@@ -1,13 +1,131 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Monthly Budget Tracker</title>
-  </head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
 <body>
-  <header>
-    <h1>Hi</h1>
-  </header>
-  <p>Finally</p>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="nav">
+            <button class="nav-btn active" onclick="showPage('home')">🏠 Home</button>
+            <button class="nav-btn" onclick="showPage('setup')">⚙️ Setup</button>
+            <button class="nav-btn" onclick="showPage('history')">📊 History</button>
+        </nav>
+
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <!-- Receipt Upload -->
+            <div class="card">
+                <h2>📸 Scan Receipt (Optional)</h2>
+                <div class="receipt-upload" id="receiptUpload" onclick="document.getElementById('receiptInput').click()">
+                    <div class="receipt-icon">📷</div>
+                    <p style="color: var(--navy); font-weight: 600; margin-bottom: 5px;">Take or Upload Receipt Photo</p>
+                    <p style="color: #666; font-size: 14px;">We'll automatically extract the amount and merchant</p>
+                    <input type="file" id="receiptInput" accept="image/*" capture="camera" style="display: none;">
+                </div>
+                <div id="receiptPreview" class="receipt-preview"></div>
+                <div id="receiptLoading" style="display: none; text-align: center; padding: 20px;">
+                    <div class="loading"></div>
+                    <p style="margin-top: 10px; color: var(--navy);">Analyzing receipt...</p>
+                </div>
+            </div>
+
+            <!-- Add Transaction -->
+            <div class="card">
+                <h2>💰 Add Spending</h2>
+                <div class="input-group">
+                    <label>Amount ($)</label>
+                    <input type="number" id="amount" step="0.01" placeholder="0.00">
+                </div>
+                <div class="input-group">
+                    <label>Category</label>
+                    <select id="category"></select>
+                </div>
+                <div class="input-group">
+                    <label>Date</label>
+                    <input type="date" id="date">
+                </div>
+                <div class="input-group">
+                    <label>Notes (optional)</label>
+                    <textarea id="notes" placeholder="Add any notes..."></textarea>
+                </div>
+                <button class="btn" onclick="addTransaction()">Add Spending</button>
+            </div>
+
+            <!-- Overall Progress -->
+            <div class="card">
+                <h2>🎯 Total Budget</h2>
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span id="total-spent" style="color: var(--tomato);">$0</span>
+                        <span id="total-budget" style="color: var(--navy);">$0</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="total-progress" class="progress-bar-fill" style="width: 0%; background: linear-gradient(90deg, var(--navy), var(--orange));"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Progress -->
+            <div class="card">
+                <h2>📊 Categories</h2>
+                <div id="category-progress"></div>
+            </div>
+        </div>
+
+        <!-- Setup Page -->
+        <div id="setup" class="page">
+            <div class="card">
+                <h1>⚙️ Budget Setup</h1>
+                <p style="margin-bottom: 30px; color: #666; font-size: 15px;">Create your budget categories and set spending limits for each.</p>
+                
+                <div id="categories-list"></div>
+
+                <h2 style="margin-top: 40px;">➕ Add New Category</h2>
+                <div class="input-group">
+                    <label>Category Name</label>
+                    <input type="text" id="new-category-name" placeholder="e.g., Food, Transport, Entertainment">
+                </div>
+                <div class="input-group">
+                    <label>Emoji</label>
+                    <input type="text" id="new-category-emoji" class="emoji-input" placeholder="🍔" maxlength="2">
+                </div>
+                <div class="input-group">
+                    <label>Budget Limit ($)</label>
+                    <input type="number" id="new-category-limit" step="0.01" placeholder="0.00">
+                </div>
+                <div class="input-group">
+                    <label>Color</label>
+                    <div class="color-options">
+                        <div class="color-option selected" style="background: #0D3B66;" data-color="#0D3B66"></div>
+                        <div class="color-option" style="background: #FAF0CA;" data-color="#FAF0CA"></div>
+                        <div class="color-option" style="background: #F4D35E;" data-color="#F4D35E"></div>
+                        <div class="color-option" style="background: #EE964B;" data-color="#EE964B"></div>
+                        <div class="color-option" style="background: #F95738;" data-color="#F95738"></div>
+                    </div>
+                </div>
+                <button class="btn" onclick="addCategory()">Add Category</button>
+            </div>
+        </div>
+
+        <!-- History Page -->
+        <div id="history" class="page">
+            <div class="card">
+                <h1>📊 Spending History</h1>
+                <p style="margin-bottom: 30px; color: #666;">View all your past transactions organized by month.</p>
+                <div id="history-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="data.js"></script>
+    <script src="ui.js"></script>
+    <script src="receipt.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
